@@ -1,10 +1,10 @@
 ## Wykorzystanie algorytmu RSA
 
-[text](https://pl.wikipedia.org/wiki/RSA_(kryptografia))
+[Algorytm RSA](https://pl.wikipedia.org/wiki/RSA_(kryptografia))
 
 ## Wykorzystanie algorytmu SSS
 
-[text](https://pl.wikipedia.org/wiki/Dzielenie_sekretu)
+[Algorytm SSS](https://pl.wikipedia.org/wiki/Dzielenie_sekretu)
 
 ## Cel
 
