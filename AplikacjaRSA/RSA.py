@@ -1,22 +1,25 @@
 class RSA:
     """
     Klasa RSA.
-        :param n: Maksymalny zakres szyfrowania
+        :param q: Liczba Pierwsza (do szyfrowania)
         :param p: Liczba pierwsza (do szyfrowania)
 
-        :ivar q:  Druga liczba pierwsza
+        :ivar n:  Zakres szyfrowania
         :ivar e:  Klucz publiczny
         :ivar d:  Klucz prywatny
     """
-    def __init__(self, n, p):
+    def __init__(self, p, q):
         """
         Konstruktor klasy RSA
-        :param n: Maksymalny zakres szyfrowania
         :param p: Liczba pierwsza (do szyfrowania)
+        :param q: Druga liczba pierwsza (do szyfrowania)
+        :ivar n: Maksymalny zakres szyfrowania (n = p * q)
+        :ivar e: Klucz publiczny (domyślnie 65537)
+        :ivar d: Klucz prywatny (obliczany automatycznie)
         """
-        self.n = n
+        self.n = p * q
         self.p = p
-        self.q = n // p
+        self.q = q
         self.e = 65537
         self.d = pow(self.e, -1, (self.p - 1) * (self.q - 1))
 
