@@ -15,7 +15,8 @@ def main():
               "\t3. Wyświetl informację o kluczach RSA\n"
               "\t4. Podziel klucz na części\n"
               "\t5. Rekonstruuj klucz\n"
-              "\t6. Wyjście")
+              "\t6. Zapisz udziały do pliku\n"
+              "\t7. Wyjście")
         try:
             i = int(input("Podaj numer: "))
         except ValueError:
@@ -58,6 +59,13 @@ def main():
                     print(f"Zrekonstruowany klucz: {reconstructed_secret}")
                     print(f"Odkodowana wiadomość: {rsa.decrypt(reconstructed_secret)}")
             case 6:
+                if shares is not None:
+                    i = 1
+                    for _, part in shares:
+                        with open(str(i)+".udzial", "w") as file:
+                            file.write(str(part))
+                        i += 1
+            case 7:
                 return
             case _:
                 print("Podano nieprawidłowy numer operacji")
