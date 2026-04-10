@@ -1,0 +1,4 @@
+*.udzial
+
+.idea
+__pycache__

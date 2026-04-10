@@ -60,11 +60,9 @@ def main():
                     print(f"Odkodowana wiadomość: {rsa.decrypt(reconstructed_secret)}")
             case 6:
                 if shares is not None:
-                    i = 1
-                    for _, part in shares:
+                    for i, part in shares:
                         with open(str(i)+".udzial", "w") as file:
                             file.write(str(part))
-                        i += 1
             case 7:
                 return
             case _:
