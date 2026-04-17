@@ -1,5 +1,6 @@
 from RSA import RSA
 from SSS import SSS
+import requests
 
 
 def main():
@@ -8,6 +9,9 @@ def main():
     shares = None
     rsa = RSA(q=7919, p=1009)
     sss = SSS()
+
+    servers = ["http://localhost:5001", "http://localhost:5002", "http://localhost:5003"]
+
     while True:
         print("Wybierz operację\n"
               "\t1. Szyfrowanie klucza\n"
@@ -15,8 +19,9 @@ def main():
               "\t3. Wyświetl informację o kluczach RSA\n"
               "\t4. Podziel klucz na części\n"
               "\t5. Rekonstruuj klucz\n"
-              "\t6. Zapisz udziały do pliku\n"
-              "\t7. Wyjście")
+              "\t6. Wyślij udziały na serwery (Docker)\n"
+              "\t7. Pobierz udziały z serwerów i zrekonstruuj\n"
+              "\t8. Wyjście")
         try:
             i = int(input("Podaj numer: "))
         except ValueError:
@@ -60,10 +65,36 @@ def main():
                     print(f"Odkodowana wiadomość: {rsa.decrypt(reconstructed_secret)}")
             case 6:
                 if shares is not None:
-                    for i, part in shares:
-                        with open(str(i)+".udzial", "w") as file:
-                            file.write(str(part))
+                    for idx, (share_id, part) in enumerate(shares):
+                        if idx < len(servers):
+                            try:
+                                requests.post(f"{servers[idx]}/share", json={"share": [share_id, part]})
+                                print(f"Udział {share_id} wysłany do serwera {servers[idx]}")
+                            except requests.exceptions.RequestException as e:
+                                print(f"Błąd wysyłania do {servers[idx]}: {e}")
+                        else:
+                            print(f"Brak serwera dla udziału {share_id}. Zapisuję lokalnie.")
+                            with open(str(share_id)+".udzial", "w") as file:
+                                file.write(str(part))
+                else:
+                    print("Brak udziałów - najpierw użyj opcji 4.")
             case 7:
+                fetched_shares = []
+                for server in servers:
+                    try:
+                        response = requests.get(f"{server}/share")
+                        if response.status_code == 200:
+                            fetched_shares.append(tuple(response.json()["share"]))
+                            print(f"Pobrano udział z {server}")
+                    except requests.exceptions.RequestException:
+                        print(f"Nie udało się połączyć z {server}")
+                if fetched_shares:
+                    reconstructed = sss.reconstruct_secret(fetched_shares)
+                    print(f"\nZrekonstruowany klucz z serwerów: {reconstructed}")
+                    print(f"Odkodowana wiadomość: {rsa.decrypt(reconstructed)}")
+                else:
+                    print("Nie udało się pobrać wystarczającej liczby udziałów z serwerów.")
+            case 8:
                 return
             case _:
                 print("Podano nieprawidłowy numer operacji")
