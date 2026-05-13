@@ -1,4 +1,5 @@
 import random
+import math
 
 def is_prime(n, k=5):
     """Test pierwszości Millera-Rabina"""
@@ -54,7 +55,7 @@ class RSA:
         :param q: Druga liczba pierwsza (do szyfrowania)
         :param bits: Ilość bitów do generacji losowej liczby
         :ivar n: Maksymalny zakres szyfrowania (n = p * q)
-        :ivar e: Klucz publiczny (domyślnie 65537)
+        :ivar e: Klucz publiczny (losowa duża liczba pierwsza)
         :ivar d: Klucz prywatny (obliczany automatycznie)
         """
         if p is None or q is None:
@@ -65,8 +66,18 @@ class RSA:
             self.q = q
             
         self.n = self.p * self.q
-        self.e = 65537
-        self.d = pow(self.e, -1, (self.p - 1) * (self.q - 1))
+        phi = (self.p - 1) * (self.q - 1)
+        
+        # Generowanie losowego klucza publicznego e (dużej liczby pierwszej mniejszej niż phi)
+        # Będziemy używać klucza e, który ma np. co najmniej połowę bitów n dla zwiększonego rozmiaru
+        e_bits = bits // 2 if bits > 32 else 16
+        while True:
+            candidate = generate_large_prime(e_bits)
+            if candidate < phi and math.gcd(candidate, phi) == 1:
+                self.e = candidate
+                break
+                
+        self.d = pow(self.e, -1, phi)
 
     def encrypt(self, plaintext):
         """

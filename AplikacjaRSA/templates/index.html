@@ -27,11 +27,11 @@
 
         <div class="card" style="width: 100%; max-width: 820px;">
             <h3>Stan Aplikacji - Klucze RSA</h3>
-            <p class="long-text"><strong>p:</strong> {{ rsa.p }}</p>
-            <p class="long-text"><strong>q:</strong> {{ rsa.q }}</p>
-            <p class="long-text"><strong>n:</strong> {{ rsa.n }}</p>
-            <p class="long-text"><strong>e:</strong> {{ rsa.e }}</p>
-            <p class="long-text"><strong>d:</strong> {{ rsa.d }}</p>
+            <p class="long-text"><strong>Liczba pierwsza p:</strong> {{ rsa.p }}</p>
+            <p class="long-text"><strong>Liczba pierwsza q:</strong> {{ rsa.q }}</p>
+            <p class="long-text"><strong>Zakres szyfrowania n:</strong> {{ rsa.n }}</p>
+            <p class="long-text"><strong>Klucz publiczny e:</strong> {{ rsa.e }}</p>
+            <p class="long-text"><strong>Klucz prywatny d:</strong> {{ rsa.d }}</p>
 
             <form action="/generate_keys" method="post" style="margin-top: 15px;">
                 <label>Generuj nowe klucze (ilość bitów):</label>
